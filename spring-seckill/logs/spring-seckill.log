@@ -1,0 +1,56 @@
+2026-03-24 14:12:55 [main] INFO  c.m.seckill.SpringSeckillApplication - Starting SpringSeckillApplication using Java 11.0.28 on MX-202509080021 with PID 31820 (D:\STS_JavaWork\spring-seckill\target\classes started by 006733 in D:\STS_JavaWork\spring-seckill)
+2026-03-24 14:12:55 [main] INFO  c.m.seckill.SpringSeckillApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-24 14:12:56 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-24 14:12:56 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 167 ms. Found 8 JPA repository interfaces.
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.OrderRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.SeckillActivityRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.SeckillRecordRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.StockLogRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.SystemMetricsRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.mxbc.seckill.entity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-24 14:12:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-03-24 14:12:58 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2026-03-24 14:12:58 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-03-24 14:12:58 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2026-03-24 14:12:58 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-03-24 14:12:58 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2792 ms
+2026-03-24 14:12:58 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
+2026-03-24 14:12:59 [main] INFO  c.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+2026-03-24 14:13:01 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-24 14:13:03 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-24 14:13:03 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+2026-03-24 14:13:04 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2026-03-24 14:13:04 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2026-03-24 14:13:04 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2026-03-24 14:13:04 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@7d6d93f9]]
+2026-03-24 14:13:04 [main] INFO  o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2026-03-24 14:13:04 [main] INFO  c.m.seckill.SpringSeckillApplication - Started SpringSeckillApplication in 9.071 seconds (JVM running for 9.625)
+2026-03-24 14:13:04 [main] INFO  c.mxbc.seckill.common.StartupManager - ========================================
+2026-03-24 14:13:04 [main] INFO  c.mxbc.seckill.common.StartupManager - 开始执行系统启动初始化...
+2026-03-24 14:13:04 [main] INFO  c.mxbc.seckill.common.StartupManager - ========================================
+2026-03-24 14:13:04 [main] INFO  c.mxbc.seckill.common.StartupManager - [阶段1/2] 初始化基础数据...
+2026-03-24 14:13:04 [main] INFO  c.mxbc.seckill.common.StartupManager - 开始初始化用户数据...
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - 创建用户: admin (ID: 351)
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - 创建用户: test (ID: 352)
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - 用户数据初始化完成
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - 商品数据已存在(12条)，跳过初始化
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - 活动数据已存在(9条)，跳过初始化
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - [阶段1/2] 基础数据初始化完成
+2026-03-24 14:13:05 [main] INFO  c.mxbc.seckill.common.StartupManager - [阶段2/2] 预热缓存...
+2026-03-24 14:13:06 [main] INFO  c.mxbc.seckill.common.StartupManager - [阶段2/2] 缓存预热完成，预热了 12 个商品库存
+2026-03-24 14:13:06 [main] INFO  c.mxbc.seckill.common.StartupManager - ========================================
+2026-03-24 14:13:06 [main] INFO  c.mxbc.seckill.common.StartupManager - 系统启动初始化完成
+2026-03-24 14:13:06 [main] INFO  c.mxbc.seckill.common.StartupManager - ========================================
+2026-03-24 14:13:36 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-03-24 14:13:40 [http-nio-8080-exec-3] WARN  com.mxbc.seckill.service.AuthService - Redis中未找到token对应的session: token=3fd24bdc840f492684937a69a786467d
+2026-03-24 14:13:41 [http-nio-8080-exec-8] INFO  com.mxbc.seckill.service.AuthService - 用户登出: token=Bearer 3fd24bdc840f492684937a69a786467d
+2026-03-24 14:13:41 [http-nio-8080-exec-1] INFO  c.m.seckill.service.CaptchaService - 验证码已保存: captchaId=7aebc2a6-7f73-484c-b7d8-3999dd0ad6a8, code=pWFBz
+2026-03-24 14:13:54 [http-nio-8080-exec-2] INFO  com.mxbc.seckill.service.AuthService - 用户注册成功: username=Peng_dey4@163.com
+2026-03-24 14:14:03 [http-nio-8080-exec-5] INFO  c.m.seckill.service.CaptchaService - 验证码验证成功: captchaId=7aebc2a6-7f73-484c-b7d8-3999dd0ad6a8
+2026-03-24 14:14:03 [http-nio-8080-exec-5] INFO  com.mxbc.seckill.service.AuthService - 用户登录成功: username=Peng_dey4@163.com, token=89e80afa6fb740beb2eb265918f4d197, userId=353
+2026-03-24 14:14:04 [http-nio-8080-exec-4] INFO  com.mxbc.seckill.service.AuthService - 从Redis获取到userId: token=89e80afa6fb740beb2eb265918f4d197, userId=353

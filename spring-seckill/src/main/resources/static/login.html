@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秒杀系统 - 用户登录</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>欢迎登录</h1>
+                <p>秒杀系统</p>
+            </div>
+            
+            <div class="login-tabs">
+                <div class="tab active" data-tab="login">登录</div>
+                <div class="tab" data-tab="register">注册</div>
+            </div>
+            
+            <div class="login-form-container">
+                <form id="loginForm" class="form active">
+                    <div class="form-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" name="username" required placeholder="请输入用户名">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="loginPassword" name="password" required placeholder="请输入密码" maxlength="30">
+                            <span class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group captcha-group">
+                        <label for="captchaCode">验证码</label>
+                        <div class="captcha-input-wrapper">
+                            <input type="text" id="captchaCode" name="captchaCode" required placeholder="请输入验证码" maxlength="5">
+                            <img id="captchaImage" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iNDAiIGZpbGw9IiNmOWY5ZjkiLz48dGV4dCB4PSI2MCIgeT0iMjUiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM5OTkiPuWbvue9hTwvdGV4dD48L3N2Zz4=" alt="验证码" class="captcha-image" onclick="refreshCaptcha()">
+                            <button type="button" class="refresh-captcha" onclick="refreshCaptcha()">刷新</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group remember-me">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span>记住我</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">登录</button>
+                    
+                    <div class="form-footer">
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                </form>
+                
+                <form id="registerForm" class="form">
+                    <div class="form-group">
+                        <label for="regUsername">用户名</label>
+                        <input type="text" id="regUsername" name="username" required placeholder="请输入用户名">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regPassword">密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="regPassword" name="password" required placeholder="请输入密码（至少12位，包含大小写字母、数字和特殊符号）" oninput="checkPasswordStrength()" maxlength="30">
+                            <span class="password-toggle" onclick="togglePassword('regPassword', this)">👁️</span>
+                        </div>
+                        <div id="passwordStrength" class="password-strength"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regConfirmPassword">确认密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="regConfirmPassword" name="confirmPassword" required placeholder="请再次输入密码" maxlength="30">
+                            <span class="password-toggle" onclick="togglePassword('regConfirmPassword', this)">👁️</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regEmail">邮箱</label>
+                        <input type="email" id="regEmail" name="email" placeholder="请输入邮箱">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regPhone">手机号</label>
+                        <input type="tel" id="regPhone" name="phone" placeholder="请输入手机号">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regNickname">昵称</label>
+                        <input type="text" id="regNickname" name="nickname" placeholder="请输入昵称">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">注册</button>
+                </form>
+            </div>
+            
+            <div class="message-box" id="messageBox"></div>
+        </div>
+        
+        <div class="login-footer">
+            <p>&copy; 2026 秒杀系统. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script src="js/login.js"></script>
+</body>
+</html>

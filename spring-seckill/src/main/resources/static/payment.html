@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付管理 - 秒杀系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0.3);
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .header h1 {
+            color: #ff6b6b;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .back-link {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: #ee5a6f;
+            transform: translateX(5px);
+        }
+
+        .payment-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .order-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .order-info h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .info-value.highlight {
+            color: #ff6b6b;
+            font-size: 24px;
+        }
+
+        .payment-methods {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        .payment-methods h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .method-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .method-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .method-option:hover {
+            border-color: #ff6b6b;
+            background: #fff0f0;
+        }
+
+        .method-option.selected {
+            border-color: #ff6b6b;
+            background: #ffe8e8;
+        }
+
+        .method-option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .method-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .method-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .method-desc {
+            font-size: 12px;
+            color: #999;
+            margin-left: 10px;
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .pay-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .pay-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .payment-history {
+            margin-top: 40px;
+        }
+
+        .payment-history h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0.0.1);
+        }
+
+        .history-table thead {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+
+        .history-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .history-table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .history-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .history-table td {
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-refunded {
+            background: #ffc107;
+            color: #856404;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #ff6b6b;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            color: #999;
+        }
+
+        .refund-btn {
+            padding: 6px 15px;
+            background: #ffc107;
+            color: #856404;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .refund-btn:hover {
+            background: #e0a800;
+        }
+
+        @media (max-width: 768px) {
+            .payment-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💳 支付管理</h1>
+            <a href="orders.html" class="back-link">← 返回订单</a>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            加载中
+        </div>
+
+        <div id="paymentContent" style="display: none;">
+            <div class="payment-container">
+                <div class="order-info">
+                    <h2>订单信息</h2>
+                    <div class="info-item">
+                        <span class="info-label">订单号：</span>
+                        <span class="info-value" id="orderId">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">商品：</span>
+                        <span class="info-value" id="productName">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">数量：</span>
+                        <span class="info-value" id="quantity">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">订单状态：</span>
+                        <span class="info-value" id="orderStatus">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">创建时间：</span>
+                        <span class="info-value" id="createdAt">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">支付金额：</span>
+                        <span class="info-value highlight" id="totalAmount">-</span>
+                    </div>
+                </div>
+
+                <div class="payment-methods">
+                    <h2>选择支付方式</h2>
+                    <div class="method-options">
+                        <label class="method-option selected">
+                            <input type="radio" name="paymentMethod" value="alipay" checked>
+                            <span class="method-icon">🔵</span>
+                            <span class="method-name">支付宝</span>
+                            <span class="method-desc">推荐使用</span>
+                        </label>
+                        <label class="method-option">
+                            <input type="radio" name="paymentMethod" value="wechat">
+                            <span class="method-icon">🟢</span>
+                            <span class="method-name">微信支付</span>
+                            <span class="method-desc">快捷支付</span>
+                        </label>
+                        <label class="method-option">
+                            <input type="radio" name="paymentMethod" value="bankcard">
+                            <span class="method-icon">💳</span>
+                            <span class="method-name">银行卡</span>
+                            <span class="method-desc">支持各大银行</span>
+                        </label>
+                    </div>
+                    <button class="pay-button" id="payButton" onclick="processPayment()">
+                        立即支付
+                    </button>
+                </div>
+            </div>
+
+            <div class="payment-history">
+                <h2>支付记录</h2>
+                <div class="loading" id="historyLoading" style="display: none;">
+                    加载中
+                </div>
+                <div class="empty-state" id="historyEmpty" style="display: none;">
+                    <h3>暂无支付记录</h3>
+                    <p>您还没有任何支付记录</p>
+                </div>
+                <table class="history-table" id="historyTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>订单号</th>
+                            <th>支付金额</th>
+                            <th>支付方式</th>
+                            <th>支付时间</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="modal.js"></script>
+    <script>
+        const API_BASE = window.location.protocol + '//' + window.location.host + '/api';
+        let currentOrderId = null;
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function formatAmount(amount) {
+            return '¥' + parseFloat(amount).toFixed(2);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getPaymentMethodName(method) {
+            const methodMap = {
+                'alipay': '支付宝',
+                'wechat': '微信支付',
+                'bankcard': '银行卡'
+            };
+            return methodMap[method] || method;
+        }
+
+        function getPaymentStatusBadge(status) {
+            const statusMap = {
+                'SUCCESS': { class: 'status-success', text: '支付成功' },
+                'FAILED': { class: 'status-failed', text: '支付失败' },
+                'PENDING': { class: 'status-pending', text: '待支付' },
+                'REFUNDED': { class: 'status-refunded', text: '已退款' }
+            };
+            return statusMap[status] || { class: '', text: status };
+        }
+
+        function getOrderStatusText(status) {
+            const statusMap = {
+                'PENDING': '待支付',
+                'PAID': '已支付',
+                'SHIPPED': '已发货',
+                'DELIVERED': '已送达',
+                'CANCELLED': '已取消',
+                'REFUNDED': '已退款'
+            };
+            return statusMap[status] || status;
+        }
+
+        async function loadOrder() {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentOrderId = urlParams.get('orderId');
+            
+            if (!currentOrderId) {
+                showError('订单号不存在');
+                setTimeout(() => {
+                    window.location.href = 'orders.html';
+                }, 1500);
+                return;
+            }
+
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_BASE}/orders/${currentOrderId}`, {
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('获取订单信息失败');
+                }
+                
+                const order = await response.json();
+                displayOrder(order);
+                loadPaymentHistory();
+                showLoading(false);
+            } catch (error) {
+                console.error('加载订单失败:', error);
+                showLoading(false);
+                showError('加载订单失败，请稍后重试');
+            }
+        }
+
+        function displayOrder(order) {
+            document.getElementById('orderId').textContent = order.orderId;
+            document.getElementById('productName').textContent = order.items && order.items.length > 0 
+                ? order.items[0].productName 
+                : '-';
+            document.getElementById('quantity').textContent = order.items && order.items.length > 0 
+                ? order.items[0].quantity 
+                : '-';
+            document.getElementById('orderStatus').textContent = getOrderStatusText(order.status);
+            document.getElementById('createdAt').textContent = formatDate(order.createdAt);
+            document.getElementById('totalAmount').textContent = formatAmount(order.totalAmount);
+
+            const payButton = document.getElementById('payButton');
+            if (order.status !== 'PENDING') {
+                payButton.disabled = true;
+                payButton.textContent = '订单已' + getOrderStatusText(order.status);
+            }
+        }
+
+        async function loadPaymentHistory() {
+            const token = getToken();
+            document.getElementById('historyLoading').style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/orders`, {
+                    headers: {
+                        'Authorization': token
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('获取支付记录失败');
+                }
+                
+                const orders = await response.json();
+                displayPaymentHistory(orders);
+                document.getElementById('historyLoading').style.display = 'none';
+            } catch (error) {
+                console.error('加载支付记录失败:', error);
+                document.getElementById('historyLoading').style.display = 'none';
+            }
+        }
+
+        function displayPaymentHistory(orders) {
+            const tbody = document.getElementById('historyBody');
+            const table = document.getElementById('historyTable');
+            const emptyState = document.getElementById('historyEmpty');
+            
+            const paidOrders = orders.filter(order => 
+                order.status === 'PAID' || order.status === 'SHIPPED' || order.status === 'DELIVERED'
+            );
+            
+            if (!paidOrders || paidOrders.length === 0) {
+                tbody.innerHTML = '';
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            table.style.display = 'table';
+            emptyState.style.display = 'none';
+            
+            tbody.innerHTML = paidOrders.map(order => {
+                const statusBadge = getPaymentStatusBadge('SUCCESS');
+                const productName = order.items && order.items.length > 0 
+                    ? order.items[0].productName 
+                    : '-';
+                
+                return `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: bold;">${order.orderId}</td>
+                        <td style="font-weight: bold; color: #ff6b6b;">${formatAmount(order.totalAmount)}</td>
+                        <td>支付宝</td>
+                        <td>${formatDate(order.updatedAt)}</td>
+                        <td><span class="status-badge ${statusBadge.class}">${statusBadge.text}</span></td>
+                        <td>
+                            <button class="refund-btn" onclick="refundPayment('${order.orderId}')">申请退款</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function processPayment() {
+            const token = getToken();
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            const payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.textContent = '支付中...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/payment/${currentOrderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paymentMethod: paymentMethod
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccess('支付成功！');
+                    setTimeout(() => {
+                        window.location.href = 'orders.html';
+                    }, 1500);
+                } else {
+                    showError(result.message || '支付失败');
+                    payButton.disabled = false;
+                    payButton.textContent = '立即支付';
+                }
+            } catch (error) {
+                console.error('支付失败:', error);
+                showError('支付失败，请稍后重试');
+                payButton.disabled = false;
+                payButton.textContent = '立即支付';
+            }
+        }
+
+        async function refundPayment(orderId) {
+            showConfirm('确定要申请退款吗？', async function() {
+                const token = getToken();
+                try {
+                    const response = await fetch(`${API_BASE}/payment/${orderId}/refund`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        showSuccess('退款申请已提交');
+                        loadPaymentHistory();
+                    } else {
+                        showError(result.message || '退款申请失败');
+                    }
+                } catch (error) {
+                    console.error('退款申请失败:', error);
+                    showError('退款申请失败，请稍后重试');
+                }
+            });
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('paymentContent').style.display = show ? 'none' : 'block';
+        }
+
+        document.querySelectorAll('.method-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.method-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        loadOrder();
+    </script>
+</body>
+</html>

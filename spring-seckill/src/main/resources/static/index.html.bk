@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>限时秒杀</title>
+    <link rel="stylesheet" href="css/seckill.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link active">首页</a>
+                <a href="orders.html" class="nav-link">订单管理</a>
+                <a href="activities.html" class="nav-link">活动管理</a>
+                <a href="stock.html" class="nav-link">库存管理</a>
+                <a href="dashboard.html" class="nav-link">数据监控</a>
+                <a href="user-center.html" class="nav-link">用户中心</a>
+            </nav>
+            <h1 class="logo">⚡ 闪电秒杀</h1>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span class="user-name" id="userName"></span>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+            <div class="login-notice" id="loginNotice">
+                <a href="login.html" class="login-link">请登录</a>
+            </div>
+        </div>
+        
+        <div class="product-list" id="productList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>加载中...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">✅</div>
+            <h2 class="modal-title" id="modalTitle">秒杀成功</h2>
+            <p class="modal-message" id="modalMessage">恭喜您成功抢购到商品！</p>
+            <div class="order-info" id="orderInfo" style="display: none;">
+                <p>订单号：<span id="orderId"></span></p>
+                <p>请及时完成支付，超时订单将自动取消</p>
+            </div>
+            <button class="modal-btn" onclick="closeModal()">确定</button>
+        </div>
+    </div>
+    
+    <script src="js/seckill.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+server:
+  # HTTPS配置
+  port: 8080
+#  ssl:
+    # 启用SSL
+#    enabled: true
+    # 密钥存储类型
+#    key-store-type: JKS
+    # 密钥存储路径（这里使用内置的测试证书）
+#    key-store: classpath:mykeystore.jks
+    # 密钥存储密码
+#    key-store-password: 123456
+    # 密钥别名
+#    key-alias: tomcat
+    # 协议
+#    protocol: TLS
+
+  # HTTP配置（用于重定向）
+#  http:
+#    port: 8080
+
+  # 连接配置
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    connection-timeout: 20000
+
+spring:
+  application:
+    name: spring-seckill
+
+  # 编码配置
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://10.11.6.153:3306/edbtest1?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&connectTimeout=10000&socketTimeout=30000
+    username: edbtest
+    password: 'edbtest@123'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,slf4j
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+  # JPA配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  # Redis配置
+  data:
+    redis:
+      host: 10.11.6.152
+      port: 6379
+      password: "123456"
+      database: 0
+      timeout: 2000ms
+
+      sentinel:
+        enabled: false
+        nodes: 10.11.6.152:26379,10.11.6.153:26379,10.11.6.154:26379
+        master: mymaster      
+
+      lettuce:
+        pool:
+          max-active: 300
+          max-idle: 80
+          min-idle: 20
+          max-wait: 3000ms
+        client:
+          share-native-connection: false
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.mxbc.seckill: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/spring-seckill.log
+    max-size: 100MB
+    max-history: 30
+
+# Resilience4j配置
+resilience4j:
+  circuitbreaker:
+    instances:
+      seckillCircuitBreaker:
+        failureRateThreshold: 50
+        slidingWindowSize: 20
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+  ratelimiter:
+    instances:
+      seckillRateLimiter:
+        limitForPeriod: 200
+        limitRefreshPeriod: 1s
+      seckillUserRateLimiter:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+      seckillIpRateLimiter:
+        limitForPeriod: 20
+        limitRefreshPeriod: 1s
+  timelimiter:
+    instances:
+      seckillTimeLimiter:
+        timeoutDuration: 3s
+
+# 应用自定义配置
+app:
+  # 数据初始化配置
+  data:
+    init:
+      enabled: true
+      skip-if-exists: true
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl: 3600
+  # 秒杀配置
+  seckill:
+    max-per-user: 1
+    order-timeout: 900

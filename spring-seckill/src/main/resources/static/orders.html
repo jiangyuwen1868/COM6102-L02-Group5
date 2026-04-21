@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - 秒杀系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .login-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 主内容区域 */
+        .main-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .page-header h1 {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .back-link {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-link:hover {
+            color: #ee5a6f;
+            transform: translateX(-5px);
+        }
+        
+        /* 统计卡片 */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .filter-group select {
+            padding: 8px 15px;
+            border: 2px solid #ff6b6b;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-group select:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .search-box input {
+            padding: 8px 15px;
+            border: 2px solid #ff6b6b;
+            border-radius: 25px;
+            font-size: 14px;
+            width: 300px;
+        }
+        
+        .search-box button {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .search-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* 订单表格 */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .orders-table thead {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+        
+        .orders-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .orders-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.3s ease;
+        }
+        
+        .orders-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .orders-table td {
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        /* 状态徽章 */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-shipped {
+            background: #6610f2;
+            color: white;
+        }
+        
+        .status-delivered {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-cancelled {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status-refunded {
+            background: #ffc107;
+            color: #856404;
+        }
+        
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-view {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-cancel {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+        
+        .btn-pay {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+        }
+        
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            padding: 8px 15px;
+            border: 2px solid #ff6b6b;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .pagination button:hover:not(.disabled) {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .pagination button.active {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .pagination .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            color: #999;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 16px;
+            color: #ff6b6b;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        /* 模态框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .modal-message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn.primary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .orders-table {
+                font-size: 12px;
+            }
+            
+            .orders-table th,
+            .orders-table td {
+                padding: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .action-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="js/auth.js"></script>
+    <div class="header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <span>闪电秒杀</span>
+            </div>
+            <nav class="nav-menu" id="navMenu" style="display: none;">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="orders.html" class="nav-link active">订单管理</a>
+                <a href="activities.html" class="nav-link">活动管理</a>
+                <a href="stock.html" class="nav-link">库存管理</a>
+                <a href="product-management.html" class="nav-link">商品管理</a>
+                <a href="dashboard.html" class="nav-link">数据监控</a>
+                <a href="user-center.html" class="nav-link">用户中心</a>
+            </nav>
+            <div class="user-section">
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <span class="user-name" id="userName"></span>
+                    <button class="logout-btn" onclick="logout()">退出登录</button>
+                </div>
+                <div class="login-notice" id="loginNotice">
+                    <a href="login.html" class="login-link">请登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1>📦 订单管理</h1>
+                <a href="index.html" class="back-link">← 返回首页</a>
+            </div>
+
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>总订单数</h3>
+                    <div class="value" id="totalOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>待支付</h3>
+                    <div class="value" id="pendingOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>已支付</h3>
+                    <div class="value" id="paidOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>已发货</h3>
+                    <div class="value" id="shippedOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>已送达</h3>
+                    <div class="value" id="deliveredOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>已取消</h3>
+                    <div class="value" id="cancelledOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>总消费金额</h3>
+                    <div class="value" id="totalSpent">¥0</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>订单状态：</label>
+                    <select id="statusFilter">
+                        <option value="">全部状态</option>
+                        <option value="PENDING">待支付</option>
+                        <option value="PAID">已支付</option>
+                        <option value="SHIPPED">已发货</option>
+                        <option value="DELIVERED">已送达</option>
+                        <option value="CANCELLED">已取消</option>
+                        <option value="REFUNDED">已退款</option>
+                    </select>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜索订单号...">
+                    <button onclick="searchOrders()">搜索</button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                加载中
+            </div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <h3>暂无订单</h3>
+                <p>您还没有任何订单，快去参与秒杀活动吧！</p>
+            </div>
+
+            <table class="orders-table" id="ordersTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>商品信息</th>
+                        <th>金额</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody">
+                </tbody>
+            </table>
+
+            <div class="pagination" id="pagination" style="display: none;">
+                <button class="disabled">上一页</button>
+                <span id="pageInfo">第 1 页</span>
+                <button>下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let currentStatus = '';
+        let searchKeyword = '';
+
+        function getToken() {
+            return localStorage.getItem('auth_token');
+        }
+
+        // 初始化用户认证状态
+        function initAuth() {
+            const token = getToken();
+            if (token) {
+                // 尝试验证token的有效性
+                fetch(`${API_BASE}/user/info`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 0 && data.user) {
+                        document.getElementById('userInfo').style.display = 'flex';
+                        document.getElementById('loginNotice').style.display = 'none';
+                        document.getElementById('navMenu').style.display = 'flex';
+                        document.getElementById('userName').textContent = data.user.nickname || data.user.username || '用户';
+                    } else {
+                        // token无效，清除并跳转到登录页面
+                        localStorage.removeItem('auth_token');
+                        document.getElementById('userInfo').style.display = 'none';
+                        document.getElementById('loginNotice').style.display = 'block';
+                        document.getElementById('navMenu').style.display = 'none';
+                        // 存储当前页面URL，以便登录后返回
+                        localStorage.setItem('previous_url', window.location.href);
+                        // 未授权时重定向到登录页面
+                        window.location.href = 'login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('验证token失败:', error);
+                    // 出错时清除token并跳转到登录页面
+                    localStorage.removeItem('auth_token');
+                    document.getElementById('userInfo').style.display = 'none';
+                    document.getElementById('loginNotice').style.display = 'block';
+                    document.getElementById('navMenu').style.display = 'none';
+                    // 存储当前页面URL，以便登录后返回
+                    localStorage.setItem('previous_url', window.location.href);
+                    // 出错时重定向到登录页面
+                    window.location.href = 'login.html';
+                });
+            } else {
+                document.getElementById('userInfo').style.display = 'none';
+                document.getElementById('loginNotice').style.display = 'block';
+                document.getElementById('navMenu').style.display = 'none';
+                // 存储当前页面URL，以便登录后返回
+                localStorage.setItem('previous_url', window.location.href);
+                // 未登录时重定向到登录页面
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('auth_token');
+            initAuth();
+        }
+
+        function getStatusBadge(status) {
+            const statusMap = {
+                'PENDING': { class: 'status-pending', text: '待支付' },
+                'PAID': { class: 'status-paid', text: '已支付' },
+                'SHIPPED': { class: 'status-shipped', text: '已发货' },
+                'DELIVERED': { class: 'status-delivered', text: '已送达' },
+                'CANCELLED': { class: 'status-cancelled', text: '已取消' },
+                'REFUNDED': { class: 'status-refunded', text: '已退款' }
+            };
+            return statusMap[status] || { class: '', text: status };
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            try {
+                // 处理 LocalDateTime 格式的日期字符串，例如 "2026-03-10T17:40:36.123456"
+                if (typeof dateString === 'string' && dateString.includes('T')) {
+                    // 替换 'T' 为空格，移除毫秒部分
+                    dateString = dateString.replace('T', ' ');
+                    if (dateString.includes('.')) {
+                        dateString = dateString.split('.')[0];
+                    }
+                    // 手动格式化日期字符串为 "YYYY-MM-DD HH:mm:ss"
+                    const parts = dateString.split(' ');
+                    if (parts.length === 2) {
+                        const datePart = parts[0];
+                        const timePart = parts[1];
+                        return `${datePart} ${timePart}`;
+                    }
+                    return dateString;
+                }
+                // 如果是其他类型，尝试转换为字符串
+                return String(dateString);
+            } catch (error) {
+                console.error('日期处理失败:', error, '日期值:', dateString);
+                return '-';
+            }
+        }
+
+        function formatAmount(amount) {
+            return '¥' + parseFloat(amount).toFixed(2);
+        }
+
+        async function loadOrders() {
+            const token = getToken();
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            showLoading(true);
+            try {
+                let url = `${API_BASE}/orders`;
+                const params = new URLSearchParams();
+                
+                if (currentStatus) {
+                    params.append('status', currentStatus);
+                }
+                
+                if (params.toString()) {
+                    url += '?' + params.toString();
+                }
+                
+                console.log('加载订单请求URL:', url);
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                
+                console.log('订单请求响应状态:', response.status);
+                
+                if (!response.ok) {
+                    const errorMessage = await response.text();
+                    console.error('订单请求失败:', response.status, errorMessage);
+                    throw new Error(`获取订单失败: ${errorMessage}`);
+                }
+                
+                const orders = await response.json();
+                console.log('获取到的订单数据:', orders);
+                displayOrders(orders);
+                updateStats(orders);
+                showLoading(false);
+            } catch (error) {
+                console.error('加载订单失败:', error);
+                showLoading(false);
+                showMessage('加载订单失败，请稍后重试\n' + error.message, 'error');
+            }
+        }
+
+        function displayOrders(orders) {
+            const tbody = document.getElementById('ordersBody');
+            const table = document.getElementById('ordersTable');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '';
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            table.style.display = 'table';
+            emptyState.style.display = 'none';
+            
+            tbody.innerHTML = orders.map(order => {
+                const statusBadge = getStatusBadge(order.status);
+                const items = order.items ? order.items.map(item => 
+                    `<div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                        ${item.productName} x ${item.quantity}
+                    </div>`
+                ).join('') : '-';
+                
+                let actionButtons = '';
+                if (order.status === 'PENDING') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <button class="action-btn btn-pay" onclick="payOrder('${order.orderId}', '${order.totalAmount}')">立即支付</button>
+                            <button class="action-btn btn-cancel" onclick="cancelOrder('${order.orderId}')">取消订单</button>
+                        </div>
+                    `;
+                } else if (order.status === 'PAID') {
+                    actionButtons = `
+                        <div class="action-buttons">
+                            <button class="action-btn btn-view" onclick="viewOrder('${order.orderId}')">查看详情</button>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: bold;">${order.orderId}</td>
+                        <td>${items}</td>
+                        <td style="font-weight: bold; color: #667eea;">${formatAmount(order.totalAmount)}</td>
+                        <td><span class="status-badge ${statusBadge.class}">${statusBadge.text}</span></td>
+                        <td>${formatDate(order.createdAt)}</td>
+                        <td>${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateStats(orders) {
+            const stats = {
+                totalOrders: orders.length,
+                pendingOrders: 0,
+                paidOrders: 0,
+                shippedOrders: 0,
+                deliveredOrders: 0,
+                cancelledOrders: 0,
+                totalSpent: 0
+            };
+            
+            orders.forEach(order => {
+                switch(order.status) {
+                    case 'PENDING':
+                        stats.pendingOrders++;
+                        break;
+                    case 'PAID':
+                        stats.paidOrders++;
+                        stats.totalSpent += parseFloat(order.totalAmount);
+                        break;
+                    case 'SHIPPED':
+                        stats.shippedOrders++;
+                        stats.totalSpent += parseFloat(order.totalAmount);
+                        break;
+                    case 'DELIVERED':
+                        stats.deliveredOrders++;
+                        stats.totalSpent += parseFloat(order.totalAmount);
+                        break;
+                    case 'CANCELLED':
+                        stats.cancelledOrders++;
+                        break;
+                }
+            });
+            
+            document.getElementById('totalOrders').textContent = stats.totalOrders;
+            document.getElementById('pendingOrders').textContent = stats.pendingOrders;
+            document.getElementById('paidOrders').textContent = stats.paidOrders;
+            document.getElementById('shippedOrders').textContent = stats.shippedOrders;
+            document.getElementById('deliveredOrders').textContent = stats.deliveredOrders;
+            document.getElementById('cancelledOrders').textContent = stats.cancelledOrders;
+            document.getElementById('totalSpent').textContent = formatAmount(stats.totalSpent);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+        
+        function showMessage(message, type = 'info') {
+            // 创建自定义消息框
+            const messageBox = document.createElement('div');
+            messageBox.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            const messageContent = document.createElement('div');
+            messageContent.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                min-width: 300px;
+                text-align: center;
+            `;
+            
+            const icon = document.createElement('div');
+            icon.style.cssText = `
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 20px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 30px;
+            `;
+            
+            if (type === 'success') {
+                icon.style.backgroundColor = '#d4edda';
+                icon.style.color = '#155724';
+                icon.innerHTML = '✓';
+            } else if (type === 'error') {
+                icon.style.backgroundColor = '#f8d7da';
+                icon.style.color = '#721c24';
+                icon.innerHTML = '✗';
+            } else {
+                icon.style.backgroundColor = '#d1ecf1';
+                icon.style.color = '#0c5460';
+                icon.innerHTML = 'i';
+            }
+            
+            const messageText = document.createElement('p');
+            messageText.style.cssText = `
+                margin-bottom: 20px;
+                font-size: 16px;
+                line-height: 1.5;
+            `;
+            messageText.textContent = message;
+            
+            const button = document.createElement('button');
+            button.style.cssText = `
+                padding: 10px 20px;
+                background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+                color: white;
+                border: none;
+                border-radius: 20px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            `;
+            button.textContent = '确定';
+            button.onclick = function() {
+                messageBox.remove();
+            };
+            
+            messageContent.appendChild(icon);
+            messageContent.appendChild(messageText);
+            messageContent.appendChild(button);
+            messageBox.appendChild(messageContent);
+            document.body.appendChild(messageBox);
+        }
+
+        async function cancelOrder(orderId) {
+            // 创建自定义确认框
+            const confirmBox = document.createElement('div');
+            confirmBox.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            const confirmContent = document.createElement('div');
+            confirmContent.style.cssText = `
+                background: white;
+                border-radius: 12px;
+                padding: 30px;
+                width: 90%;
+                max-width: 400px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                text-align: center;
+            `;
+            
+            confirmContent.innerHTML = `
+                <h3 style="margin-bottom: 20px; color: #333;">确认取消订单</h3>
+                <p style="margin-bottom: 30px; color: #666;">确定要取消这个订单吗？</p>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="this.parentElement.parentElement.parentElement.remove();" style="flex: 1; padding: 10px 20px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: 600;">取消</button>
+                    <button onclick="confirmCancelOrder('${orderId}', this);" style="flex: 1; padding: 10px 20px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 600;">确定</button>
+                </div>
+            `;
+            
+            confirmBox.appendChild(confirmContent);
+            document.body.appendChild(confirmBox);
+        }
+        
+        async function confirmCancelOrder(orderId, button) {
+            // 移除确认框
+            button.parentElement.parentElement.parentElement.remove();
+            
+            const token = getToken();
+            try {
+                const response = await fetch(`${API_BASE}/orders/${orderId}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('订单取消成功', 'success');
+                    loadOrders();
+                } else {
+                    showMessage(result.message || '取消订单失败', 'error');
+                }
+            } catch (error) {
+                console.error('取消订单失败:', error);
+                showMessage('取消订单失败，请稍后重试', 'error');
+            }
+        }
+
+        async function payOrder(orderId, amount) {
+            // 创建微信支付确认模态框
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                border-radius: 15px;
+                padding: 30px;
+                width: 90%;
+                max-width: 400px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            `;
+            
+            const formattedAmount = formatAmount(parseFloat(amount));
+            
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 20px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#07C160" width="100%" height="100%"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">微信支付</h3>
+                    <p style="color: #666; margin-bottom: 20px;">请确认支付信息</p>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="margin-bottom: 10px;"><strong>订单号:</strong> ${orderId}</p>
+                    <p style="margin-bottom: 10px;"><strong>支付方式:</strong> 微信支付</p>
+                    <p style="font-size: 24px; font-weight: bold; color: #ff6b35; margin-top: 20px;">${formattedAmount}</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="this.parentElement.parentElement.parentElement.remove();" style="flex: 1; padding: 12px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 20px; cursor: pointer; font-weight: 600;">取消</button>
+                    <button onclick="confirmPayment('${orderId}', this);" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #07C160 0%, #059669 100%); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 600;">确定支付</button>
+                </div>
+            `;
+            
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+        
+        async function confirmPayment(orderId, button) {
+            // 模拟支付成功
+            button.textContent = '支付中...';
+            button.disabled = true;
+            
+            try {
+                const token = getToken();
+                // 调用实际的支付API
+                const response = await fetch(`${API_BASE}/payment/${orderId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paymentMethod: 'wechat' })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('支付成功！', 'success');
+                    button.parentElement.parentElement.parentElement.remove();
+                    loadOrders();
+                } else {
+                    showMessage(result.message || '支付失败', 'error');
+                    button.textContent = '确定支付';
+                    button.disabled = false;
+                }
+            } catch (error) {
+                console.error('支付失败:', error);
+                showMessage('支付失败，请稍后重试', 'error');
+                button.textContent = '确定支付';
+                button.disabled = false;
+            }
+        }
+
+        function viewOrder(orderId) {
+            showMessage(`查看订单详情: ${orderId}`, 'info');
+        }
+
+        function searchOrders() {
+            searchKeyword = document.getElementById('searchInput').value.trim();
+            loadOrders();
+        }
+
+        document.getElementById('statusFilter').addEventListener('change', function() {
+            currentStatus = this.value;
+            loadOrders();
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchOrders();
+            }
+        });
+
+        initAuth();
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>限时秒杀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .login-link {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* 秒杀时间条 */
+        .seckill-timer {
+            background: white;
+            padding: 15px 0;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .timer-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .timer-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .time-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .time-value {
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .time-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        /* 商品列表 */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4757;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-badge.active {
+            background: #26de81;
+            color: white;
+        }
+        
+        .status-badge.upcoming {
+            background: #feca57;
+            color: #333;
+        }
+        
+        .status-badge.ended {
+            background: #747d8c;
+            color: white;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            height: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .price-section {
+            margin: 10px 0;
+        }
+        
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+        
+        .price-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .price-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4757;
+        }
+        
+        .original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+        }
+        
+        .stock-section {
+            margin: 10px 0;
+        }
+        
+        .stock-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .stock-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #26de81 0%, #20bf6b 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .stock-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .stock-percent {
+            font-weight: 500;
+        }
+        
+        /* 倒计时样式 - 与 index.html 保持一致 */
+        .countdown-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .countdown-label {
+            color: #92400e;
+            font-size: 12px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .time-block {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-width: 60px;
+            flex-direction: column;
+        }
+        
+        .time-block .time-value {
+            background: none;
+            color: #1a1a2e;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 0;
+            display: block;
+            line-height: 1;
+        }
+        
+        .time-block .time-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+            display: block;
+        }
+        
+        .time-separator {
+            font-size: 24px;
+            font-weight: 700;
+            color: #92400e;
+        }
+        
+        .action-section {
+            margin-top: 15px;
+        }
+        
+        .seckill-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .seckill-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
+        .seckill-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-icon {
+            font-size: 16px;
+        }
+        
+        .btn-tips {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 8px;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 模态框 */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .modal-message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .order-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .order-info p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .modal-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            
+            .product-image {
+                height: 120px;
+            }
+            
+            .product-title {
+                font-size: 12px;
+                height: 36px;
+            }
+            
+            .price-value {
+                font-size: 16px;
+            }
+            
+            .seckill-btn {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="container">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span>闪电秒杀</span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="index.html" class="nav-link active">首页</a>
+                    <a href="orders.html" class="nav-link">订单管理</a>
+                    <a href="activities.html" class="nav-link">活动管理</a>
+                    <a href="stock.html" class="nav-link">库存管理</a>
+                    <a href="product-management.html" class="nav-link">商品管理</a>
+                    <a href="dashboard.html" class="nav-link">数据监控</a>
+                    <a href="user-center.html" class="nav-link">用户中心</a>
+                </nav>
+                <div class="user-section">
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <span class="user-name" id="userName"></span>
+                        <button class="logout-btn" onclick="logout()">退出登录</button>
+                    </div>
+                    <div class="login-notice" id="loginNotice">
+                        <a href="login.html" class="login-link">请登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="seckill-timer">
+            <div class="container">
+                <div class="timer-content">
+                    <div class="timer-title">限时秒杀</div>
+                    <div class="timer-block">
+                        <div class="time-item">
+                            <span class="time-value" id="current-hour">12</span>
+                            <span class="time-label">时</span>
+                        </div>
+                        <span>:</span>
+                        <div class="time-item">
+                            <span class="time-value" id="current-minute">00</span>
+                            <span class="time-label">分</span>
+                        </div>
+                        <span>:</span>
+                        <div class="time-item">
+                            <span class="time-value" id="current-second">00</span>
+                            <span class="time-label">秒</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-grid" id="productList">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>加载中...</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">✅</div>
+            <h2 class="modal-title" id="modalTitle">秒杀成功</h2>
+            <p class="modal-message" id="modalMessage">恭喜您成功抢购到商品！</p>
+            <div class="order-info" id="orderInfo" style="display: none;">
+                <p>订单号：<span id="orderId"></span></p>
+                <p>请及时完成支付，超时订单将自动取消</p>
+            </div>
+            <button class="modal-btn" onclick="closeModal()">确定</button>
+        </div>
+    </div>
+    
+    <script src="js/seckill.js"></script>
+    <script>
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('current-hour').textContent = hours;
+            document.getElementById('current-minute').textContent = minutes;
+            document.getElementById('current-second').textContent = seconds;
+        }
+        
+        // 每秒更新一次时间
+        setInterval(updateCurrentTime, 1000);
+        updateCurrentTime(); // 立即执行一次
+        
+        // 等待seckill.js加载完成后重写函数
+        window.addEventListener('load', function() {
+            if (typeof renderProducts !== 'undefined' && typeof createProductCard !== 'undefined' && typeof fetchProducts !== 'undefined') {
+                // 重写渲染函数以适应新的布局
+                const originalRenderProducts = renderProducts;
+                renderProducts = function() {
+                    const productList = document.getElementById('productList');
+                    productList.innerHTML = '';
+                    
+                    console.log('渲染商品列表，数量:', products.length);
+                    
+                    if (products.length === 0) {
+                        productList.innerHTML = `
+                            <div class="loading">
+                                <p>暂无秒杀活动</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    products.forEach(product => {
+                        console.log('渲染商品:', product);
+                        const card = createProductCard(product, product.id);
+                        productList.appendChild(card);
+                        
+                        if (product.status === 'active') {
+                            startCountdown(product.endTime, product.id, 'active');
+                        } else if (product.status === 'upcoming') {
+                            startCountdown(product.startTime, product.id, 'upcoming');
+                        }
+                    });
+                };
+                
+                // 重写创建商品卡片函数以适应新的布局
+                const originalCreateProductCard = createProductCard;
+                createProductCard = function(product, productId) {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.id = `product-card-${productId}`;
+                    
+                    const stock = product.stock || 0;
+                    const originalPrice = product.originalPrice || 0;
+                    const price = product.price || 0;
+                    
+                    let statusClass = 'inactive';
+                    let statusText = '未开始';
+                    let countdownLabel = '距离秒杀结束还有';
+                    let showCountdown = false;
+                    
+                    switch (product.status) {
+                        case 'active':
+                            statusClass = 'active';
+                            statusText = '进行中';
+                            countdownLabel = '距离秒杀结束还剩';
+                            showCountdown = true;
+                            break;
+                        case 'upcoming':
+                            statusClass = 'upcoming';
+                            statusText = '即将开始';
+                            countdownLabel = '距离秒杀开始还有';
+                            showCountdown = true;
+                            break;
+                        case 'ended':
+                            statusClass = 'ended';
+                            statusText = '已结束';
+                            countdownLabel = '活动已结束';
+                            showCountdown = false;
+                            break;
+                        default:
+                            statusClass = 'inactive';
+                            statusText = '未开始';
+                            countdownLabel = '活动未开始';
+                            showCountdown = false;
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="product-image">
+                            <div class="badge">限时秒杀</div>
+                            <div class="status-badge ${statusClass}" id="statusBadge-${productId}">
+                                ${statusText}
+                            </div>
+                            ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.name}" onerror="this.style.display='none'">` : ''}
+                        </div>
+                        
+                        <div class="product-info">
+                            <h2 class="product-title">${product.name}</h2>
+                            
+                            <div class="price-section">
+                                <div class="price-row">
+                                    <span class="price-value">¥${formatPrice(price)}</span>
+                                    ${originalPrice > 0 ? `<span class="original-price">¥${formatPrice(originalPrice)}</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="stock-section">
+                                <div class="stock-bar">
+                                    <div class="stock-fill" id="stockFill-${productId}" style="width: ${Math.max(0, Math.min(100, stock))}%"></div>
+                                </div>
+                                <div class="stock-info">
+                                    <span>剩余 ${stock} 件</span>
+                                    <span class="stock-percent">已抢 ${Math.max(0, Math.min(100, 100 - stock))}%</span>
+                                </div>
+                            </div>
+                            
+                            ${showCountdown ? `
+                            <div class="countdown-section">
+                                <div class="countdown-label">${countdownLabel}</div>
+                                <div class="countdown-timer">
+                                    <div class="time-block">
+                                        <span class="time-value" id="hours-${productId}">00</span>
+                                        <span class="time-label">时</span>
+                                    </div>
+                                    <div class="time-separator">:</div>
+                                    <div class="time-block">
+                                        <span class="time-value" id="minutes-${productId}">00</span>
+                                        <span class="time-label">分</span>
+                                    </div>
+                                    <div class="time-separator">:</div>
+                                    <div class="time-block">
+                                        <span class="time-value" id="seconds-${productId}">00</span>
+                                        <span class="time-label">秒</span>
+                                    </div>
+                                </div>
+                            </div>
+                            ` : ''}
+                            
+                            <div class="action-section">
+                                <button class="seckill-btn" id="seckillBtn-${productId}" 
+                                          ${product.status !== 'active' ? 'disabled' : ''} 
+                                          onclick="seckill(${product.id}, ${productId})"><span class="btn-icon">⚡</span>
+                                    <span class="btn-text">${product.status === 'active' ? '立即秒杀' : '活动未开始'}</span>
+                                </button>
+                                <div class="btn-tips">每人限购1件 · 数量有限</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    return card;
+                };
+                
+                // 调用fetchProducts()函数获取商品数据并渲染
+                fetchProducts();
+            }
+        });
+    </script>
+</body>
+</html>
