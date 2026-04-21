@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspSrvLogMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspSrvLogEntity" id="CspSrvLogResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql" resultType="java.lang.Integer">
+		SELECT count(*) FROM csp_srv_log
+    </select>
+    <select id="count" databaseId="oracle" resultType="java.lang.Integer">
+		SELECT count(*) FROM csp_srv_log
+    </select>
+    
+    <select id="select" resultMap="CspSrvLogResultMap" databaseId="mysql">
+		SELECT * FROM csp_srv_log WHERE logid=#{logid}
+    </select>
+    <select id="select" resultMap="CspSrvLogResultMap" databaseId="oracle">
+		SELECT * FROM csp_srv_log WHERE logid=#{logid,jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="insert"  databaseId="mysql">
+		INSERT INTO csp_srv_log(
+			logid,
+			appid,
+			nodeid,
+			branchid,
+			trace_id,
+			recv_time,
+			resp_time,
+			txcode,
+			transret,
+			hostname,
+			hostip,
+			errorcode,
+			innererrcode,
+			errormsg,
+			reqmsg,
+			rspmsg,
+			costtimeinfo,
+			signature) 
+		VALUES(
+			#{logid},
+			#{appid},
+			#{nodeid},
+			#{branchid},
+			#{trace_id},
+			#{recv_time},
+			#{resp_time},
+			#{txcode},
+			#{transret},
+			#{hostname},
+			#{hostip},
+			#{errorcode},
+			#{innererrcode},
+			#{errormsg},
+			#{reqmsg},
+			#{rspmsg},
+			#{costtimeinfo},
+			#{signature})
+    </insert>
+     <insert id="insert"  databaseId="oracle">
+     INSERT INTO csp_srv_log(
+			logid,
+			appid,
+			nodeid,
+			branchid,
+			trace_id,
+			recv_time,
+			resp_time,
+			txcode,
+			transret,
+			hostname,
+			hostip,
+			errorcode,
+			innererrcode,
+			errormsg,
+			reqmsg,
+			rspmsg,
+			costtimeinfo,
+			signature) 
+		VALUES(
+			#{logid,jdbcType=VARCHAR},
+			#{appid,jdbcType=VARCHAR},
+			#{nodeid,jdbcType=VARCHAR},
+			#{branchid,jdbcType=VARCHAR},
+			#{trace_id,jdbcType=VARCHAR},
+			#{recv_time,jdbcType=TIMESTAMP},
+			#{resp_time,jdbcType=TIMESTAMP},
+			#{txcode,jdbcType=VARCHAR},
+			#{transret,jdbcType=VARCHAR},
+			#{hostname,jdbcType=VARCHAR},
+			#{hostip,jdbcType=VARCHAR},
+			#{errorcode,jdbcType=VARCHAR},
+			#{innererrcode,jdbcType=VARCHAR},
+			#{errormsg,jdbcType=VARCHAR},
+			#{reqmsg,jdbcType=CLOB},
+			#{rspmsg,jdbcType=CLOB},
+			#{costtimeinfo,jdbcType=VARCHAR},
+			#{signature,jdbcType=VARCHAR})
+	</insert>
+</mapper>

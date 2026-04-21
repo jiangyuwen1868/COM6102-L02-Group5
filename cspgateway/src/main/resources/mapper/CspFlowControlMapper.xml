@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspFlowControlMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspFlowControlEntity" id="CspFlowControlResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_flowcontrol
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_flowcontrol
+    </select>
+    
+    <select id="select" resultMap="CspFlowControlResultMap" databaseId="mysql">
+		SELECT * FROM csp_flowcontrol WHERE appid=#{config_key} AND txcode=#{txcode}
+    </select>
+    <select id="select" resultMap="CspFlowControlResultMap" databaseId="oracle">
+		SELECT * FROM csp_flowcontrol WHERE appid=#{appid,jdbcType=VARCHAR} AND txcode=#{txcode,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspFlowControlResultMap" databaseId="mysql">
+		SELECT * FROM csp_flowcontrol
+    </select>   
+    <select id="selectAll" resultMap="CspFlowControlResultMap" databaseId="oracle">
+		SELECT * FROM csp_flowcontrol
+    </select>
+    
+</mapper>

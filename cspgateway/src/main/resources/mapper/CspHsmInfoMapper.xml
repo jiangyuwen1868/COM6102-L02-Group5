@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspHsmInfoMapper">
+    <resultMap id="CspHsmInfoResultMap" type="CspHsmInfoEntity">
+        <id property="hsmId" column="hsm_id" />
+        <result property="hsmTypeId" column="hsm_type_id" />
+        <result property="hsmName" column="hsm_name" />
+        <result property="hsmSn" column="hsm_sn" />
+        <result property="hsmIp" column="hsm_ip" />
+        <result property="hsmPort" column="hsm_port" />
+        <result property="hsmPwd" column="hsm_pwd" />
+        <result property="hsmContextPath" column="hsm_contextpath" />
+        <result property="hsmGroupId" column="hsmgroup_id" />
+        <result property="keepAlive" column="use_long_connect" />
+        <result property="enable" column="enable" />
+        <result property="remark" column="remark" />
+        <result property="creator" column="creator" />
+        <result property="createTime" column="creattime" />
+        <association property="hsmType" column="hsm_type_id" javaType="CspHsmTypeEntity" resultMap="hsmTypeResult" />
+        <association property="hsmGroup" column="hsmgroup_id" javaType="CspHsmGroupEntity" resultMap="hsmGroupResult" />
+    </resultMap>
+
+    <resultMap id="hsmTypeResult" type="CspHsmTypeEntity">
+        <id property="hsmTypeId" column="hsm_type_id" />
+        <result property="hsmType" column="hsm_type" />
+        <result property="hsmVendor" column="hsm_vendor" />
+        <result property="tsName" column="ts_name" />
+        <result property="tsMobile" column="ts_mobile" />
+        <result property="tsEmail" column="ts_email" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <resultMap id="hsmGroupResult" type="CspHsmGroupEntity">
+        <id property="hsmGroupId" column="hsmgroup_id" />
+        <result property="hsmGroupName" column="hsmgroup_name" />
+        <result property="hsmGroupDesc" column="hsmgroup_desc" />
+        <result property="connectTimeout" column="connect_timeout" />
+        <result property="creator" column="creator" />
+        <result property="createTime" column="creattime" />
+        <result property="updater" column="updater" />
+        <result property="updateTime" column="updatetime" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="CspHsmInfoResultMap">
+        SELECT * FROM csp_hsm_info i
+          LEFT JOIN csp_hsm_type t ON t.hsm_type_id = i.hsm_type_id
+          LEFT JOIN csp_hsm_group g ON g.hsmgroup_id = i.hsmgroup_id
+    </select>
+
+    <select id="selectByGroupId" resultMap="CspHsmInfoResultMap">
+        SELECT * FROM csp_hsm_info i
+          LEFT JOIN csp_hsm_type t ON t.hsm_type_id = i.hsm_type_id
+          LEFT JOIN csp_hsm_group g ON g.hsmgroup_id = i.hsmgroup_id
+         WHERE i.hsmgroup_id = #{groupId}
+    </select>
+</mapper>

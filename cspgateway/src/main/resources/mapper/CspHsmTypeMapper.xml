@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspHsmTypeMapper">
+    <resultMap id="CspHsmTypeResultMap" type="CspHsmTypeEntity">
+        <id property="hsmTypeId" column="hsm_type_id" />
+        <result property="hsmType" column="hsm_type" />
+        <result property="hsmVendor" column="hsm_vendor" />
+        <result property="tsName" column="ts_name" />
+        <result property="tsMobile" column="ts_mobile" />
+        <result property="tsEmail" column="ts_email" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="CspHsmTypeResultMap">
+        SELECT * FROM csp_hsm_type
+    </select>
+
+    <select id="selectById" resultMap="CspHsmTypeResultMap">
+        SELECT * FROM csp_hsm_type WHERE hsm_type_id = #{typeId}
+    </select>
+</mapper>

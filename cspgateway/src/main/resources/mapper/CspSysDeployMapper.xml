@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspSysDeployMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspSysDeployEntity" id="CspSysDeployResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_sys_deploy
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_sys_deploy
+    </select>
+    
+    <select id="select" resultMap="CspSysDeployResultMap" databaseId="mysql">
+		SELECT * FROM csp_sys_deploy WHERE deployid=#{deployid}
+    </select>
+    <select id="select" resultMap="CspSysDeployResultMap" databaseId="oracle">
+		SELECT * FROM csp_sys_deploy WHERE deployid=#{deployid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspSysDeployResultMap" databaseId="mysql">
+		SELECT * FROM csp_sys_deploy
+    </select>   
+    <select id="selectAll" resultMap="CspSysDeployResultMap" databaseId="oracle">
+		SELECT * FROM csp_sys_deploy
+    </select>
+    
+    <select id="selectByWhere" resultMap="CspSysDeployResultMap"  >
+    	SELECT * FROM csp_sys_deploy
+    	<where>
+    		<if test="appcode!=null">
+				and appcode=#{appcode}
+			</if>
+			<if test="hostname!=null">
+				and hostname=#{hostname}
+			</if>
+			<if test="sysip!=null">
+				and sysip=#{sysip}
+			</if>
+		</where>
+    </select>
+    
+    <insert id="insert"  >
+    	INSERT INTO csp_sys_deploy(
+    		groupid,
+    		deployid,
+    		hostname,
+    		username,
+    		deploycode,
+    		appcode,
+    		sysip,
+    		sysport,
+    		servaddr,
+    		isuseful,
+    		weight,
+    		remark)
+    	VALUES(
+			#{groupid},
+			#{deployid},
+			#{hostname},
+			#{username},
+			#{deploycode},
+			#{appcode},
+			#{sysip},
+			#{sysport},
+			#{servaddr},
+			#{isuseful},
+			#{weight},
+			#{remark})
+    </insert>
+    
+    <update id="update"  >
+    	UPDATE csp_sys_deploy SET 
+    		hostname=#{hostname},
+    		username=#{username},
+    		deploycode=#{deploycode},
+    		appcode=#{appcode},
+    		sysip=#{sysip},
+    		sysport=#{sysport},
+    		servaddr=#{servaddr},
+    		isuseful=#{isuseful},
+    		weight=#{weight},
+    		remark=#{remark}
+    	WHERE groupid=#{groupid} AND deployid=#{deployid}
+    </update>
+</mapper>

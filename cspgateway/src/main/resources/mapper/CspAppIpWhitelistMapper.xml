@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspAppIpWhitelistMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspAppIpWhitelistEntity" id="CspAppIpWhitelistResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_app_ipwhitelist
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_app_ipwhitelist
+    </select>
+    
+    <select id="select" resultMap="CspAppIpWhitelistResultMap" databaseId="mysql">
+		SELECT * FROM csp_app_ipwhitelist WHERE appid=#{appid}
+    </select>
+    <select id="select" resultMap="CspAppIpWhitelistResultMap" databaseId="oracle">
+		SELECT * FROM csp_app_ipwhitelist WHERE appid=#{appid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspAppIpWhitelistResultMap" databaseId="mysql">
+		SELECT * FROM csp_app_ipwhitelist
+    </select>   
+    <select id="selectAll" resultMap="CspAppIpWhitelistResultMap" databaseId="oracle">
+		SELECT * FROM csp_app_ipwhitelist
+    </select>
+    
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspAppSrvAuthMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspAppSrvAuthEntity" id="CspAppSrvAuthResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_app_srvauth
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_app_srvauth
+    </select>
+    
+    <select id="select" resultMap="CspAppSrvAuthResultMap" databaseId="mysql">
+		SELECT * FROM csp_app_srvauth WHERE appid=#{appid}
+    </select>
+    <select id="select" resultMap="CspAppSrvAuthResultMap" databaseId="oracle">
+		SELECT * FROM csp_app_srvauth WHERE appid=#{appid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspAppSrvAuthResultMap" databaseId="mysql">
+		SELECT * FROM csp_app_srvauth
+    </select>   
+    <select id="selectAll" resultMap="CspAppSrvAuthResultMap" databaseId="oracle">
+		SELECT * FROM csp_app_srvauth
+    </select>
+    
+</mapper>

@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: cspGateway
+  profiles:
+    active: pro
+file:
+  #  共享目录
+  sharedDir:  /home/anycspgm/anycspgm_service/
+  # 监控交易条数
+  monitorTranceTotal: 200
+  # 定时器控制值 （毫秒）
+  timerDate: 60000

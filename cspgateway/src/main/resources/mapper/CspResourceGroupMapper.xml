@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspResourceGroupMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspResourceGroupEntity" id="CspResourceGroupResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_resource_group
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_resource_group
+    </select>
+    
+    <select id="select" resultMap="CspResourceGroupResultMap" databaseId="mysql">
+		SELECT * FROM csp_resource_group WHERE groupid=#{groupid}
+    </select>
+    <select id="select" resultMap="CspResourceGroupResultMap" databaseId="oracle">
+		SELECT * FROM csp_resource_group WHERE groupid=#{groupid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspResourceGroupResultMap" databaseId="mysql">
+		SELECT * FROM csp_resource_group
+    </select>   
+    <select id="selectAll" resultMap="CspResourceGroupResultMap" databaseId="oracle">
+		SELECT * FROM csp_resource_group
+    </select>
+    
+</mapper>

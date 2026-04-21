@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+
+	<property name="LOG_HOME" value="./logs" />
+	<property name="appName" value="cspGateway"/>
+	<property name="log_level" value="INFO"/>
+	<!-- 日志的展现格式 -->
+    <property name="log_pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%-10t] %-5p %-22c{1}  %m%n"/>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			
+			<springProfile name="dev">
+				<pattern>${log_pattern}</pattern>
+			</springProfile>
+			
+			<springProfile name="!dev">
+				<pattern>${log_pattern}</pattern>
+			</springProfile>
+		</layout>
+	</appender>
+	
+	<appender name="appLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+                 <level>${log_level}</level>
+        </filter>
+        <file>${LOG_HOME}/${appName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/${appName}-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<!-- 保留多少天 归档也删除-->
+			<MaxHistory>30</MaxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>1GB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<!-- 日志输出格式 -->
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>${log_pattern}</pattern>
+		</layout>
+	</appender>
+	
+	
+	<appender name="control_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>${log_level}</level>
+			<!--  
+			<onMatch>DENY</onMatch>
+			<onMismatch>ACCEPT</onMismatch>-->
+		</filter>
+		<encoder>
+			<pattern>${log_pattern}</pattern>
+		</encoder>
+		<file>${LOG_HOME}/control.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/%d{yyyy-MM-dd}/control-%d{yyyy-MM-dd}-%i.log.gz</fileNamePattern>
+			<!-- 保留多少天 归档也删除-->
+			<MaxHistory>30</MaxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>1GB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+	</appender>
+	
+	
+	<logger name="com.jyw.csp.controllers" level="ERROR" additivity="true">
+		<appender-ref ref="control_log" />
+	</logger>
+
+	<root level="Debug">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="appLogAppender" />
+	</root>
+</configuration>

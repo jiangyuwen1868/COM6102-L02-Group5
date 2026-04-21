@@ -1,0 +1,78 @@
+server:
+  port: 8201
+  servlet: 
+    context-path: '/cspGateway'
+  tomcat:
+   max-connections: 10000
+   accept-count: 3000
+   max-threads: 400
+   min-spare-threads: 3
+
+jasypt:
+  encryptor:
+    password: anydef@csp
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.jyw.csp.entity
+  configuration:
+    database-id: mysql
+    default-fetch-size: 500
+    default-statement-timeout: 80
+
+spring:
+  mvc.view.prefix: /WEB-INF/jsp
+  mvc.view.suffix: .jsp
+  mvc.async.request-timeout: 20000
+  datasource:
+#    type: com.dcep.tsm.config.CustomizeDruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    driver-class-name: oracle.jdbc.OracleDriver
+    username: anycsp
+    password: anydef#anycsp
+#    url: jdbc:oracle:thin:@localhost:1521:orcl
+    url: jdbc:mysql://121.36.75.225:3306/anycsp?characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
+#    urls: jdbc:mysql://127.0.0.1:3306/dceptsm?characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8, jdbc:mysql://127.0.0.1:3306/dceptsm?characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
+    druid:
+      filters: stat
+      max-active: 100
+      initial-size: 10
+      min-idle: 10
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      max-wait: 3000
+      time-between-eviction-runs-millis: 60000
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+      statViewServlet:
+          enabled: true  # 设置白名单，不填则允许所有访问
+          allow:
+          url-pattern: /druid/* # 控制台管理用户名和密码
+          login-username:
+          login-password:
+  redis:
+   timeout: 200
+   password: admin123
+   jedis:
+    pool:
+     max-active: 1024
+     max-wait: 5000
+     max-idle: 200
+     min-idle: 10
+   sentinel:
+     master: mymaster
+     #nodes: 128.196.39.130:26379,128.196.39.131:26379,128.196.36.50:26379
+     nodes: 192.168.0.111:26380,192.168.0.111:26381,192.168.0.111:26382
+     #nodes: 10.193.60.21:22037,10.193.60.22:22043,10.193.60.23:22050
+  #配置rabbitMq 服务器
+  rabbitmq:
+    addresses: 127.0.0.1:5672 #指定client连接到的server的地址，多个以逗号分隔(优先取addresses，然后再取host)
+redis:
+ key:
+  expire: 1800000
+ passwd: admin123
+
+

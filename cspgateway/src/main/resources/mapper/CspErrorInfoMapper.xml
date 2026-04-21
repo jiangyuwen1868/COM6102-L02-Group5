@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspErrorInfoMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspErrorInfoEntity" id="CspErrorInfoResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_errorinfo
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_errorinfo
+    </select>
+    
+    <select id="select" resultMap="CspErrorInfoResultMap" databaseId="mysql">
+		SELECT * FROM csp_errorinfo WHERE errorcode=#{errorcode}
+    </select>
+    <select id="select" resultMap="CspErrorInfoResultMap" databaseId="oracle">
+		SELECT * FROM csp_errorinfo WHERE errorcode=#{errorcode,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspErrorInfoResultMap" databaseId="mysql">
+		SELECT * FROM csp_errorinfo
+    </select>   
+    <select id="selectAll" resultMap="CspErrorInfoResultMap" databaseId="oracle">
+		SELECT * FROM csp_errorinfo
+    </select>
+    
+</mapper>

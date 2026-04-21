@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspHsmGroupMapper">
+    <resultMap id="CspHsmGroupResultMap" type="CspHsmGroupEntity">
+        <id property="hsmGroupId" column="hsmgroup_id" />
+        <result property="hsmGroupName" column="hsmgroup_name" />
+        <result property="hsmGroupCategory" column="hsmgroup_category" />
+        <result property="hsmGroupDesc" column="hsmgroup_desc" />
+        <result property="connectTimeout" column="connect_timeout" />
+        <result property="connectPoolSize" column="connect_poolsize" />
+        <result property="creator" column="creator" />
+        <result property="createTime" column="creattime" />
+        <result property="updater" column="updater" />
+        <result property="updateTime" column="updatetime" />
+    </resultMap>
+    <resultMap id="CspHsmTypeResultMap"  type="CspHsmTypeEntity">
+    	<result property="hsmTypeId" column="hsm_type_id" />
+    	<result property="hsmType" column="hsm_type" />
+    	<result property="hsmCategory" column="hsm_category" />
+    	<result property="hsmVendor" column="hsm_vendor" />
+    	<result property="tsName" column="ts_name" />
+    	<result property="tsMobile" column="ts_mobile" />
+    	<result property="tsEmail" column="ts_email" />
+    	<result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="CspHsmGroupResultMap">
+        SELECT * FROM csp_hsm_group
+    </select>
+
+    <select id="selectById" resultMap="CspHsmGroupResultMap">
+        SELECT * FROM csp_hsm_group WHERE hsmgroup_id=#{groupId}
+    </select>
+
+    <select id="selectByCategory" resultMap="CspHsmGroupResultMap">
+        SELECT * FROM csp_hsm_group WHERE hsmgroup_category = #{category}
+    </select>
+    
+    <select id="selectHsmTypeByGroupId" resultMap="CspHsmTypeResultMap">
+    	SELECT * FROM csp_hsm_type WHERE hsm_type_id=(SELECT hsm_type_id FROM csp_hsm_info WHERE hsmgroup_id=#{groupId} limit 1)
+    </select>
+    
+    <select id="selectHsmTypeByIpPort" resultMap="CspHsmTypeResultMap">
+    	SELECT * FROM csp_hsm_type WHERE hsm_type_id = (SELECT hsm_type_id FROM csp_hsm_info WHERE hsm_ip=#{hsm_ip} AND hsm_port=#{hsm_port})
+    </select>
+</mapper>

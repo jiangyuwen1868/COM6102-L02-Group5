@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspSysConfigMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspSysConfigEntity" id="CspSysConfigResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM sys_config
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM sys_config
+    </select>
+    
+    <select id="select" resultMap="CspSysConfigResultMap" databaseId="mysql">
+		SELECT * FROM sys_config WHERE config_key=#{config_key}
+    </select>
+    <select id="select" resultMap="CspSysConfigResultMap" databaseId="oracle">
+		SELECT * FROM sys_config WHERE config_key=#{config_key,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspSysConfigResultMap" databaseId="mysql">
+		SELECT * FROM sys_config
+    </select>   
+    <select id="selectAll" resultMap="CspSysConfigResultMap" databaseId="oracle">
+		SELECT * FROM sys_config
+    </select>
+    
+</mapper>

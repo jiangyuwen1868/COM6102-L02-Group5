@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.CspInitKeysMapper">
+
+	<resultMap type="com.jyw.csp.entity.CspInitKeysEntity" id="CspInitKeysResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM csp_init_keys
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM csp_init_keys
+    </select>
+    
+    <select id="select" resultMap="CspInitKeysResultMap" databaseId="mysql">
+		SELECT * FROM csp_init_keys WHERE keyid=#{keyid}
+    </select>
+    <select id="select" resultMap="CspInitKeysResultMap" databaseId="oracle">
+		SELECT * FROM csp_init_keys WHERE keyid=#{keyid,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="selectAll" resultMap="CspInitKeysResultMap" databaseId="mysql">
+		SELECT * FROM csp_init_keys
+    </select>   
+    <select id="selectAll" resultMap="CspInitKeysResultMap" databaseId="oracle">
+		SELECT * FROM csp_init_keys
+    </select>
+    
+</mapper>

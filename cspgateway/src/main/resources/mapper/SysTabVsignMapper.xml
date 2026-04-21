@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>      
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jyw.csp.mapper.SysTabVsignMapper">
+
+	<resultMap type="com.jyw.csp.entity.SysTabVsignEntity" id="SysTabVsignResultMap">
+   </resultMap>
+    <select id="count" databaseId="mysql">
+		SELECT count(*) FROM sys_tab_vsign
+    </select>
+    <select id="count" databaseId="oracle">
+		SELECT count(*) FROM sys_tab_vsign
+    </select>
+    
+    <select id="select" resultMap="SysTabVsignResultMap" databaseId="mysql">
+		SELECT * FROM sys_tab_vsign WHERE tablename=#{tablename}
+    </select>
+    <select id="select" resultMap="SysTabVsignResultMap" databaseId="oracle">
+		SELECT * FROM sys_tab_vsign WHERE tablename=#{tablename,jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="insert"  databaseId="mysql">
+		INSERT INTO sys_tab_vsign(
+			tablename,
+			signature) 
+		VALUES(
+			#{tablename},
+			#{signature})
+    </insert>
+     <insert id="insert"  databaseId="oracle">
+     INSERT INTO sys_tab_vsign(
+			tablename,
+			signature) 
+		VALUES(
+			#{tablename,jdbcType=VARCHAR},
+			#{signature,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" databaseId="mysql">
+		UPDATE sys_tab_vsign SET signature = #{signature} WHERE tablename = #{tablename}
+	</update>
+	<update id="update" databaseId="oracle">
+		UPDATE sys_tab_vsign SET signature = #{signature} WHERE tablename = #{tablename,jdbcType=VARCHAR}
+	</update>
+</mapper>
